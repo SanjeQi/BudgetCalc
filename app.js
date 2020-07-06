@@ -28,8 +28,20 @@ var UIController = (function () {
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!---APP CONTROLLER---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 var appController = (function (BGTCtrl, UICtrl) {
-  var addItem, input, DOM;
-  DOM = UICtrl.getDOMStrings();
+  var addItem, input, setupEventListeners;
+
+  setupEventListeners = function () {
+    var DOM;
+    DOM = UICtrl.getDOMStrings();
+    document.querySelector(DOM.inputBtn).addEventListener("click", addItem);
+
+    document.addEventListener("keypress", function (e) {
+      if (e.keyCode === 13 || e.which === 13) {
+        addItem();
+      }
+    });
+  };
+
   addItem = function () {
     //1.get the field input data
     input = UICtrl.getInput();
@@ -37,13 +49,15 @@ var appController = (function (BGTCtrl, UICtrl) {
     //3.add item to Ui controller
     //4.calculate budget
     //5.display budget on the UI.
-    console.log(input);
   };
-  document.querySelector(DOM.inputBtn).addEventListener("click", addItem);
-
-  document.addEventListener("keypress", function (e) {
-    if (e.keyCode === 13 || e.which === 13) {
-      addItem();
-    }
-  });
+  return {
+    init: function () {
+      console.log(
+        "Application has started. Feel free to calculate your monthly budget"
+      );
+      setupEventListeners();
+    },
+  };
 })(budgetController, UIController);
+
+appController.init();
