@@ -18,6 +18,38 @@ var budgetController = (function () {
       inc: 0,
     },
   };
+  return {
+    addItem: function (type, des, val) {
+      var newItem, ID;
+
+      //Create id [1 2 3 4 5] next id = 6
+      //          [1 2 4 6 8] next id = 9
+      // ID = last ID + 1
+
+      //Create new ID
+      if (data.allItems[type].length > 0) {
+        ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+      } else {
+        ID = 0;
+      }
+
+      //Create new item based on 'inc' or 'exp'
+      if (type === "exp") {
+        newItem = new Expense(ID, des, val);
+      } else if (type === "inc") {
+        newItem = new Income(ID, des, val);
+      }
+
+      //Push it into my data structure
+      data.allItems[type].push(newItem);
+
+      //return the new element
+      return newItem;
+    },
+    testing: function () {
+      console.log(data);
+    },
+  };
 })();
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!---UI CONTROLLER---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -45,25 +77,27 @@ var UIController = (function () {
 })();
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!---APP CONTROLLER---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-var appController = (function (BGTCtrl, UICtrl) {
-  var addItem, input, setupEventListeners;
+var appController = (function (budgetCtrl, UICtrl) {
+  var ctrlAddItem, setupEventListeners;
 
   setupEventListeners = function () {
     var DOM;
     DOM = UICtrl.getDOMStrings();
     //EventListeners
-    document.querySelector(DOM.inputBtn).addEventListener("click", addItem);
+    document.querySelector(DOM.inputBtn).addEventListener("click", ctrlAddItem);
     document.addEventListener("keypress", function (e) {
       if (e.keyCode === 13 || e.which === 13) {
-        addItem();
+        ctrlAddItem();
       }
     });
   };
 
-  addItem = function () {
+  ctrlAddItem = function () {
+    var newItem, input;
     //1.get the field input data
     input = UICtrl.getInput();
     //2.add item to the budget controller
+    newItem = budgetCtrl.addItem(input.type, input.description, input.value);
     //3.add item to Ui controller
     //4.calculate budget
     //5.display budget on the UI.
