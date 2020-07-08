@@ -71,6 +71,9 @@ var UIController = (function () {
         value: document.querySelector(DOMStrings.inputValue).value,
       };
     },
+    getDOMStrings: function () {
+      return DOMStrings;
+    },
     addListItem: function (obj, type) {
       //Add html string with placeholders
       var html, newHtml, element;
@@ -92,9 +95,16 @@ var UIController = (function () {
       //Select the element and insert the new element next to it
       document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
     },
-
-    getDOMStrings: function () {
-      return DOMStrings;
+    clearFields: function () {
+      var fields, fieldsArr;
+      fields = document.querySelectorAll(
+        DOMStrings.inputDescription + ", " + DOMStrings.inputValue
+      );
+      fieldsArr = Array.prototype.slice.call(fields);
+      fieldsArr.forEach(function (cur) {
+        cur.value = "";
+      });
+      fieldsArr[0].focus();
     },
   };
 })();
@@ -123,8 +133,10 @@ var appController = (function (budgetCtrl, UICtrl) {
     newItem = budgetCtrl.addItem(input.type, input.description, input.value);
     //3.add item to Ui controller
     UICtrl.addListItem(newItem, input.type);
-    //4.calculate budget
-    //5.display budget on the UI.
+    //4.Clear field
+    UICtrl.clearFields();
+    //5.calculate budget
+    //6.display budget on the UI.
   };
   return {
     init: function () {
