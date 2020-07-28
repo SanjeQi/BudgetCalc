@@ -17,7 +17,18 @@ const budgetController = (function () {
       exp: 0,
       inc: 0,
     },
+    budget: 0,
+    percentage: -1,
   };
+
+  const calaculateTotal = function (type) {
+    let sum = 0;
+    data.allItems[type].forEach(function (cur) {
+      sum += cur.value;
+    });
+    data.totals[type] = sum;
+  };
+
   return {
     addItem(type, des, val) {
       let newItem;
@@ -46,6 +57,28 @@ const budgetController = (function () {
 
       // return the new element
       return newItem;
+    },
+    calculateBudget() {
+      // Calculate total inc and total exp
+      calaculateTotal('inc');
+      calaculateTotal('exp');
+      // Calculate budget: total inc  minus total exp
+
+      data.budget = data.totals.inc - data.totals.exp;
+      // Calulate percentage that we spent
+      if (data.totals.inc > 0) {
+        data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+      } else {
+        data.percentage = -1;
+      }
+    },
+    getBudget() {
+      return {
+        budget: data.budget,
+        totalInc: data.totals.inc,
+        totalExp: data.totals.exp,
+        percentage: data.percentage,
+      };
     },
     testing() {
       console.log(data);
@@ -114,8 +147,11 @@ const UIController = (function () {
 const appController = (function (budgetCtrl, UICtrl) {
   const updateBudget = function () {
     // 1.calculate budget
+    budgetCtrl.calculateBudget();
     // 2.return the budget
+    const budget = budgetCtrl.getBudget();
     // 3.display budget on the UI.
+    console.log(budget);
   };
 
   const ctrlAddItem = function () {
@@ -129,7 +165,7 @@ const appController = (function (budgetCtrl, UICtrl) {
       // 4.Clear field
       UICtrl.clearFields();
       // 5.Calculate and Update budget
-      UICtrl.updateBudget();
+      updateBudget();
     }
   };
 
