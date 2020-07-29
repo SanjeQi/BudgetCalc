@@ -59,7 +59,6 @@ const budgetController = (function () {
       return newItem;
     },
     deleteItem(type, id) {
-      // id = 3
       const ids = data.allItems[type].map(function (current) {
         return current.id;
       });
@@ -206,8 +205,9 @@ const appController = (function (budgetCtrl, UICtrl) {
     if (itemID) {
       const splitID = itemID.split('-');
       const type = splitID[0]; // inc or exp
-      const ID = splitID[1]; // 0 , 1, 2..
+      const ID = parseInt(splitID[1]); // 0 , 1, 2..
       // 1. Delete the item from the data sctructure
+      budgetCtrl.deleteItem(type, ID);
       // 2. Delete the item from the UI
       // 3. Re-calculate budget and update budget
     }
