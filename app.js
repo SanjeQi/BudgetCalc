@@ -144,6 +144,10 @@ const UIController = (function () {
       // Select the element and insert the new element next to it
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
     },
+    deleteListItem(selectorID) {
+      const el = document.getElementById(selectorID);
+      el.parentNode.removeChild(el);
+    },
     clearFields() {
       const fields = document.querySelectorAll(
         `${DOMStrings.inputDescription}, ${DOMStrings.inputValue}`
@@ -209,7 +213,9 @@ const appController = (function (budgetCtrl, UICtrl) {
       // 1. Delete the item from the data sctructure
       budgetCtrl.deleteItem(type, ID);
       // 2. Delete the item from the UI
+      UICtrl.deleteListItem(itemID);
       // 3. Re-calculate budget and update budget
+      updateBudget();
     }
   };
 
