@@ -109,6 +109,7 @@ const UIController = (function () {
     expenseLabel: '.budget__expenses--value',
     percentageLabel: '.budget__expenses--percentage',
     container: '.container',
+    itemPercentage: '.item__percentage',
   };
   return {
     getInput() {
@@ -188,6 +189,12 @@ const appController = (function (budgetCtrl, UICtrl) {
     UICtrl.displayBudget(budget);
   };
 
+  const updatePercentages = function () {
+    // 1.Calculate te percentages
+    // 2. Read procentages from the budget controller.
+    // 3. Update the UI the new percentages
+  };
+
   const ctrlAddItem = function () {
     // 1.get the field input data
     const input = UICtrl.getInput();
@@ -200,6 +207,8 @@ const appController = (function (budgetCtrl, UICtrl) {
       UICtrl.clearFields();
       // 5.Calculate and Update budget
       updateBudget();
+      // 6. Calculate and update percentages
+      updatePercentages();
     }
   };
 
@@ -216,6 +225,8 @@ const appController = (function (budgetCtrl, UICtrl) {
       UICtrl.deleteListItem(itemID);
       // 3. Re-calculate budget and update budget
       updateBudget();
+      // 4. Calculate and update percentages
+      updatePercentages();
     }
   };
 
