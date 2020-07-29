@@ -60,7 +60,13 @@ const budgetController = (function () {
     },
     deleteItem(type, id) {
       // id = 3
-      data.allItems[type][id];
+      const ids = data.allItems[type].map(function (current) {
+        return current.id;
+      });
+      const index = ids.indexOf(id);
+      if (index !== -1) {
+        data.allItems[type].splice(index, 1);
+      }
     },
     calculateBudget() {
       // Calculate total inc and total exp
